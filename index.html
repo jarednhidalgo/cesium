@@ -1,75 +1,53 @@
-
-<!doctype html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Cesium</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <title>Cesium Client</title>
+    <link rel="stylesheet" href="Cesium/Build/Cesium/Widgets/widgets.css" />
+    <script src="Cesium/Build/Cesium/Cesium.js"></script>
     <style>
-    body { font-family: sans-serif; }
-    li { margin-top: 5px; }
-    .outer > li { margin-top: 1.4em; }
-    .smallFont { font-size: 60%; }
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
     </style>
 </head>
-
 <body>
+    <div id="cesiumContainer"></div>
+    <script>
+        Cesium.BingMapsApi.defaultKey = 'AmFJGnQY_mHo0cXLgWsc84nHYFtwqQrQSGOFp1nSJJajDaULALRqxsj0sXprmzAb';
+        var viewer = new Cesium.Viewer('cesiumContainer');
 
-<ul class="outer">
-    <li>
-        Apps
-        <ul>
-            <li>
-                <a href="Apps/CesiumViewer/index.html">Cesium Viewer</a>
-                (<a href="Build/Apps/CesiumViewer/index.html">built version</a>)
-            </li>
-            <li>
-                <a href="Apps/HelloWorld.html">Hello World</a>
-            </li>
-            <li>
-                <a href="Apps/Sandcastle/index.html">Sandcastle</a>
-                (<a href="Build/Apps/Sandcastle/index.html">built version</a>)
-            </li>
-            <li>
-                <a href="Apps/CesiumViewer/index.html?inspector=true">Cesium Inspector</a>
-                (with <a href="Apps/Sandcastle/gallery/Cesium%20Inspector.html">example primitives</a>)
-                (with <a href="Apps/CesiumViewer/index.html?source=../SampleData/simple.czml&inspector=true">simple CZML</a>)
-            </li>
-            <li>
-                <a href="Apps/TimelineDemo/index.html">Timeline Demo</a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        Tests
-        <ul>
-            <li>
-                <a href="Specs/SpecRunner.html">Run all tests</a>
-                <span class="smallFont">(<a href="Specs/SpecRunner.html?webglValidation">Run with WebGL validation</a>)</span>
-                <span class="smallFont">(<a href="Specs/SpecRunner.html?webglStub">Run with WebGL stub</a>)</span>
-            </li>
-            <li>
-                <a href="Specs/SpecRunner.html?category=none">Select a test to run</a>
-            </li>
-            <li>
-                <a href="Specs/SpecRunner.html?category=WebGL">Run only WebGL tests</a>
-            </li>
-            <li>
-                <a href="Specs/SpecRunner.html?category=All&amp;not=WebGL">Run only non-WebGL tests</a>
-            </li>
-            <li>
-                <a href="Specs/SpecRunner.html?built=true">Run all tests against combined file</a>
-                <span class="smallFont">(<a href="Specs/SpecRunner.html?built=true&release=true">Run all tests against combined file with debug code removed</a>)</span>
-            </li>
-            <li>
-                <a href="Instrumented/jscoverage.html?../Specs/SpecRunner.html%3FbaseUrl%3D..%2FInstrumented">Run all tests with code coverage</a>
-                (build 'instrumentForCoverage' first.)
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="Build/Documentation/index.html">Documentation</a>
-    </li>
-</ul>
+        var longitude = -114.0;
+        var latitude = 40;
+        var height = 2.0;   //Note: It's 2.0 to make it distinguishable from the surface.
+        var heading = 1.0;
+        var pitch = 1.0;
+        var roll = 0.0;
 
+        var position = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
+        function translate(hd, pi, ro) {
+            var hpr = new Cesium.HeadingPitchRoll(hd, pi, ro);
+            return Cesium.Quaternion.fromHeadingPitchRoll(hpr);
+        }
+
+        var q = translate(heading, pitch, roll);
+
+        var rect = viewer.entities.add({
+            position: position,
+            orientation: q,
+            plane: {
+                plane: new Cesium.Plane(Cesium.Cartesian3.UNIT_X, 0.0),
+                dimensions: new Cesium.Cartesian2(1.0, 1.0),
+                material: 'qsys-sydney-sand.jpg'
+            }
+        });
+
+        viewer.trackedEntity = rect;
+
+    </script>
 </body>
 </html>
